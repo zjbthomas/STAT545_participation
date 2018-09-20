@@ -134,16 +134,45 @@ Let’s build a histogram of life expectancy.
 | Grammar Component     | Specification |
 | --------------------- | ------------- |
 | **data**              | `gapminder`   |
-| **aesthetic mapping** |               |
-| **geometric object**  |               |
-| scale                 |               |
-| statistical transform |               |
+| **aesthetic mapping** | `x`           |
+| **geometric object**  | histogram     |
+| scale                 | linear        |
+| statistical transform | none          |
 
 2.  Build the histogram of life expectancy.
 
+<!-- end list -->
+
+``` r
+ggplot(gapminder, aes(lifeExp)) +
+  geom_histogram()
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+![](cm006-exercise_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
 3.  Change the number of bins to 50.
 
+<!-- end list -->
+
+``` r
+ggplot(gapminder, aes(lifeExp)) +
+  geom_histogram(bins=50)
+```
+
+![](cm006-exercise_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
 4.  Instead of a histogram, let’s create a kernel density plot.
+
+<!-- end list -->
+
+``` r
+ggplot(gapminder, aes(lifeExp)) + 
+  geom_density()
+```
+
+![](cm006-exercise_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 5.  Optional: git stage and commit
 
