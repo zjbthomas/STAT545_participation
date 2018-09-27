@@ -157,7 +157,18 @@ Convenience functions:
 n_distinct: How many years of record does each country have?
 
 ```{r}
+gapminder %>% 
+  group_by(continent) %>% 
+  summarize(
+    num = n()
+  )
 
+gapminder %>% 
+  group_by(continent) %>% 
+  tally()
+
+gapminder %>% 
+  count(continent)
 ```
 
 count
@@ -179,7 +190,11 @@ For any generic output, we can use dplyr's `do()` function -- but that's a topic
 Calculate the growth in population since the first year on record _for each country_. `first()` is useful.
 
 ```{r}
-
+gapminder %>% 
+  group_by(country) %>% 
+  mutate(
+    growth = pop - first(pop)
+  )
 ```
 
 Notice that `dplyr` has retained the original grouping.
@@ -187,13 +202,21 @@ Notice that `dplyr` has retained the original grouping.
 How about growth compared to `1972`?
 
 ```{r}
-
+gapminder %>% 
+  group_by(country) %>% 
+  mutate(
+    growth = pop - pop[year == 1972]
+  )
 ```
 
 Make a new variable `pop_last_time`, as the "lag-1" population -- that is, the population from the previous entry of that country. Use the `lag` function.
 
 ```{r}
-
+gapminder %>% 
+  group_by(country) %>% 
+  mutate(
+    change = pop - lag(pop)
+  )
 ```
 
 Similar: `lead` function.
@@ -207,13 +230,58 @@ Your turn: Use what we learned to answer the following questions.
 1. Determine the country that experienced the sharpest 5-year drop in life expectancy, in each continent.
 
 ```{r}
+continent_max_drop <- gapminder %>% 
+  group_by(continent, country) %>% 
+  mutate(
+    drop = lag(lifeExp) - lifeExp
+  ) %>% 
+  filter(!is.na(drop)) %>% 
+  summarize(
+    max_drop_countries = max(drop)
+  ) %>% 
+  group_by(continent) %>% 
+  summarize(
+    max_drop = max(max_drop_countries)
+  )
 
+country_max_drop <- gapminder %>% 
+  group_by(continent, country) %>% 
+  mutate(
+    drop = lag(lifeExp) - lifeExp
+  ) %>% 
+  filter(!is.na(drop)) %>% 
+  summarize(
+    max_drop_countries = max(drop)
+  ) %>% 
+  group_by(country) %>% 
+  summarize(
+    max_drop = max(max_drop_countries)
+  )
+
+left_join(x=continent_max_drop, y=country_max_drop, by="max_drop") %>% 
+  select(country, continent, max_drop)
 ```
 
 2. Compute the relative gdp (NOT per capita!) of each country compared to Canada (= GDP of a country / GDP of Canada).
 
 ```{r}
+cda <- gapminder %>%
+  mutate(
+    gdp = gdpPercap * pop
+  ) %>% 
+  filter(country == "Canada") %>% 
+  `[[`("gdpPercap")
 
+my_df <- gapminder %>% 
+  mutate(
+    cda_gdp = rep(cda, nlevels(country)),
+    gdp = gdpPercap * pop,
+    rel_gdp = gdp / cda_gdp
+  )
+
+my_df %>% 
+  filter(country == "Canada")
+summary(my_df$rel_gdp)
 ```
 
 Sanity check: are Canada's numbers = 1? What is the spread of numbers like (should be small)?
