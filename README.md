@@ -12,3 +12,4 @@ This repo is to record my participation in STAT 545.
 - [Class Meeting 08](/cm08)
 - [Class Meeting 09](/cm09)
 - [Class Meeting 10](/cm10)
+- [Class Meeting 11](/cm11)
