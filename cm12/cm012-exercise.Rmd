@@ -72,7 +72,7 @@ set.seed(10)
 Convert `draw` to a factor. What are the levels? How many are there? How many of each category was drawn?
 
 ```{r}
-
+factor(draw)
 ```
 
 
@@ -92,7 +92,8 @@ Try binding by row `lotr1` and `lotr2`:
 Which one is more lenient? Which would you prefer?
 
 ```{r}
-
+rbind(lotr1,lotr2)
+bind_rows(lotr1,lotr2)
 ```
 
 
@@ -120,7 +121,11 @@ gap_small <- gapminder %>%
 Exercise: Make a bar chart of the number of times a continent has a country with population < 250,000 in the `gapminder` data set. Try with and without `scale_x_discrete(drop=FALSE)`.
 
 ```{r}
-
+gap_small <- gapminder %>% 
+  filter(pop < 250000) 
+gap_small %>% 
+  ggplot() +
+  geom_bar(aes(continent, fill=continent))
 ```
 
 __Example of when it's bad__: If you ever use the `levels()` function.
@@ -186,7 +191,7 @@ ggplot(gap_asia_2007, aes(lifeExp, country)) + geom_point()
 Let's use `fct_reorder()` to reorder the countries of `gap_asia_2007` by life Expectancy, and produce the same plot:
 
 ```{r, fig.width=2, fig.height=1}
-
+fct_reorder(gap_asia_2007$country, gap_asia_2007$lifeExp) 
 ```
 
 What about when life Expectancy is not unique? Example: life expectancy of each continent:
@@ -203,7 +208,10 @@ ggplot(gapminder, aes(continent, lifeExp)) +
 Exercise: Try making the above box plot and violin plots, ordered by median lifeExp. Try other functions to order by by modifying the `.fun` argument.
 
 ```{r, fig.width=2, fig.height=1}
-
+ggplot(gapminder, aes(continent, lifeExp)) +
+  geom_violin()
+ggplot(gapminder, aes(continent, lifeExp)) +
+  geom_boxplot()
 ```
 
 
@@ -226,7 +234,11 @@ Use `fct_reorder2(f, x, y)` to reorder factor `f`:
 Exercise: Reorder the above line graph so that the legend is in order of last life expectancy. Useful for black-and-white printing!
 
 ```{r, fig.width=2, fig.height=1}
-
+gap_select %>% 
+ggplot(aes(x = year, y = lifeExp,
+                  color = fct_reorder2(country, year, lifeExp))) +
+  geom_line() +
+  labs(color = "country")
 ```
 
 ### Ordering "because I said so"
@@ -285,7 +297,12 @@ More practically, we can lump the least frequent levels together as "Other". Mod
 - Note: you can manually specify non-other levels using `fct_other()`.
 
 ```{r, fig.width=2, fig.height=1}
-
+cont %>% 
+  fct_lump(n=2) %>% 
+  qplot()
+cont %>% 
+  fct_lump(n=-2) %>% 
+  qplot()
 ```
 
 We can use the `w` argument to lump by another variable.
