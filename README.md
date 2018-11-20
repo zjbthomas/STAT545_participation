@@ -9,6 +9,7 @@ This repo is to record my participation in STAT 545 and STAT 547.
 - [Class Meeting 04](/cm04)
 - [Class Meeting 05 & 06](/cm05&06)
 - [Class Meeting 07 & 08](/cm07&08)
+- [Class Meeting 09](/cm09)
 
 ## Class Meetings for STAT 545 are moved into folder ["STAT545"](/STAT545)
 - [Class Meeting 02](/STAT545/cm02)
